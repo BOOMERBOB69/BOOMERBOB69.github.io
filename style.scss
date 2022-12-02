@@ -1,0 +1,111 @@
+@import 'compass/css3';
+@import url('https://fonts.googleapis.com/css?family=Chewy|Gloria+Hallelujah');
+$bg : #121327;
+html { height:100%; width:100%; }
+body{
+ margin:0;
+ padding:0;
+ height:100%;
+ width:100%;
+ background:$bg;
+ overflow:hidden;
+ @include filter(hue-rotate(0deg));
+ @include animation(huerot 5s ease infinite )
+}
+/** end for goo container **/
+@function randomNum($min, $max) {
+ $rand: random();
+ $randomNum: $min + floor($rand * (($max - $min) + 1));
+ @return $randomNum;
+}
+
+$color:#fff;
+$color2:#5048A0;
+$color3:#85EDE8;
+$color4:#48098b;
+.glowy-blob {
+ position:absolute;
+ left:50%;
+ top:50%;
+ @include transform(translate(-50,-50));
+ @include filter(url('#goo'));
+ div {
+  width:80px;
+  height: 80px;
+  background:$color3;
+  @include border-radius(500px);
+  display: inline-block;
+  position:absolute;
+  box-shadow:0px 0px 50px $color3;
+  $top-collection: 0;
+  $left-collection: 0;
+
+  @for $i from 2 to 17 {
+   $left: randomNum(-60px, 60px);
+   $top: randomNum(-60px, 60px);
+   $randWH : randomNum(30px, 60px);
+   &:nth-child(#{$i}) {
+    width:$randWH;
+    height: $randWH;
+    left:$left;
+   }
+
+   $left-collection: append($left-collection,$left);
+   $top-collection: append($top-collection,$top);
+  }
+
+  @for $i from 1 to length($top-collection) {
+   &:nth-child(#{$i}) {
+    top: 0;
+    left: 0;
+    @include animation(anim-#{$i} 2.5s ease-in-out infinite);
+    @if($i == 1) {
+     @include animation-delay(0s);
+    }
+    @else {
+     @include animation-delay(randomNum(1s,3s));
+    }
+  }
+  /**keyframes **/
+   @include keyframes(anim-#{$i}) {
+    0%{left:0;top:0}
+    50% { left:nth($left-collection, $i+1);top:nth($top-collection, $i)}
+    100%{left:0;top:0}
+   }
+  } //end of collection loop
+  &:hover {
+   cursor:default;
+  }
+ } //end of div
+
+} //end of glowby-blob
+
+ span {
+  color:$color3;
+  opacity: 0.5;
+  font-size: 24px;
+  font-family:'Chewy';
+  font-weight: bolder;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  position: absolute;
+  left:50%;
+  top:30%;
+  @include transform(translate(-50,-50));
+  -webkit-touch-callout: none; /* iOS Safari */
+  @include user-select(none);
+	 &:hover {
+		 cursor:default;
+	 }
+ }
+
+@include keyframes(huerot) {
+ 0%{@include filter(hue-rotate(0deg));}
+ 100%{@include filter(hue-rotate(360deg));}
+}
+@include keyframes(bounceback) {
+ 100%{left:0;top:0}
+}
+
+
+
